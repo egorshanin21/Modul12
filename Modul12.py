@@ -45,6 +45,26 @@ class Record:
         self.phones.append(phone)
         print(self.phones)
 
+    def formatting_record(self, record):
+
+        phone = getattr(record, 'phone', '')
+        if phone:
+            phone_val = phone.value
+        else:
+            phone_val = "Phone number missing."
+        email = getattr(record, 'email', '')
+        if email:
+            email_val = email.value
+        else:
+            email_val = "Email is missing."
+        birthday = getattr(record, 'birthday', '')
+        if birthday:
+            birthday_val = birthday.value
+        else:
+            birthday_val = "Date of birth is missing."
+
+        return {"phone": phone_val, "email": email_val, "birthday": birthday_val}
+
     def days_to_birthday(self):
         if self.birthday:
             now = datetime.now().date()
@@ -111,7 +131,7 @@ def main():
         user_exit_list = ['good bye', 'close', 'exit', '.']
         if user_inp in user_exit_list:
             print('Good bye!\n'
-                  'Your entries have been successfully saved!')
+                  'Your data has been successfully saved in the Address Book!')
             break
         elif user_inp == 'hello':
             print('How can I help you?')
@@ -161,20 +181,23 @@ def add_handler(address_book):
 
 def show_all_handler(address_book):
     data = address_book.show_all_records()
-    for record, v in data.items():
-        print(record, v)
+    for name, record in data.items():
+        rec_data = record.formatting_record(record)
+        print(f"Name: {name}, Phone: {rec_data['phone']}, Email: {rec_data['email']}, Birthday: {rec_data['birthday']}")
 
 
 def find_handler(address_book):
     find_user = input('Enter contact name or phone: ')
     data = address_book.show_all_records()
     for name, record in data.items():
+        rec_data = record.formatting_record(record)
         if name.startswith(find_user):
-            print(name)
+            print(f"Name: {name}, Phone: {rec_data['phone']}, Email: {rec_data['email']}, Birthday: {rec_data['birthday']}")
         phone = getattr(record, 'phone', '')
         if phone:
             if phone.value.startswith(find_user):
-                print(phone.value)
+                print(f"Name: {name}, Phone: {rec_data['phone']}, Email: {rec_data['email']}, Birthday: {rec_data['birthday']}")
+
 
 
 if __name__ == "__main__":
